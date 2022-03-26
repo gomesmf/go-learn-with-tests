@@ -29,7 +29,9 @@ func Hello(name string, language string) string {
 		name = "World"
 	}
 
-	return greetingCompose(greetingPrefix(language), name)
+	prefix := greetingPrefix(language)
+
+	return greetingCompose(prefix, name)
 }
 
 func main() {
