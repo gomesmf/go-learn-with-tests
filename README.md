@@ -1,5 +1,3 @@
-# go-learning
+references
 
-# references
-
-https://github.com/quii/learn-go-with-tests/blob/main/hello-world.md#if
+- [quii/learn-go-with-testes](https://github.com/quii/learn-go-with-tests)
