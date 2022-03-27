@@ -14,6 +14,16 @@ func TestRepeat(t *testing.T) {
 	}
 }
 
+func TestJoin(t *testing.T) {
+	s := []string{"my", "name", "is", "Matheus"}
+	got := Join(s, "-")
+	expected := "my-name-is-Matheus"
+
+	if got != expected {
+		t.Errorf("expected %q but got %q", expected, got)
+	}
+}
+
 func BenchmarkRepeat(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		Repeat("a", 6)
