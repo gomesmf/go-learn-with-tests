@@ -7,7 +7,7 @@ import (
 )
 
 func TestCountdown(t *testing.T) {
-	t.Run("first test", func(t *testing.T) {
+	t.Run("print 4 to Go!", func(t *testing.T) {
 		buffer := &bytes.Buffer{}
 		spySleeper := &SpySleeper{}
 
