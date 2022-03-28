@@ -9,6 +9,8 @@ import (
 
 const finalWord = "Go!"
 const countdownStart = 3
+const sleep = "sleep"
+const write = "write"
 
 func Countdown(out io.Writer, sleeper Sleeper) {
 	for i := countdownStart; i > 0; i-- {
@@ -36,9 +38,6 @@ type DefaultSleeper struct{}
 func (d *DefaultSleeper) Sleep() {
 	time.Sleep(1 * time.Second)
 }
-
-const sleep = "sleep"
-const write = "write"
 
 type SpyCountdownOperations struct {
 	Calls []string
