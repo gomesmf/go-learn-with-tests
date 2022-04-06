@@ -82,3 +82,22 @@ func simpleTime(hours, minutes, seconds int) time.Time {
 func testName(t time.Time) string {
 	return t.Format("15:04:05")
 }
+
+func TestMinuteHandPoint(t *testing.T) {
+	cases := []struct {
+		time  time.Time
+		point Point
+	}{
+		{simpleTime(0, 30, 0), Point{0, -1}},
+		{simpleTime(0, 45, 0), Point{-1, 0}},
+	}
+
+	for _, c := range cases {
+		t.Run(testName(c.time), func(t *testing.T) {
+			got := minuteHandPoint(c.time)
+			if !roughlyEqualPoint(got, c.point) {
+				t.Fatalf("want %v, but got %v", c.point, got)
+			}
+		})
+	}
+}
