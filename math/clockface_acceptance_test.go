@@ -69,10 +69,10 @@ func TestSVGWriterMinuteHand(t *testing.T) {
 		time time.Time
 		line Line
 	}{
-		// {
-		// 	simpleTime(0, 0, 0),
-		// 	Line{150, 150, 150, 70},
-		// },
+		{
+			simpleTime(0, 0, 0),
+			Line{150, 150, 150, 70},
+		},
 	}
 
 	for _, c := range cases {
