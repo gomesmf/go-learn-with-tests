@@ -14,10 +14,20 @@ type Point struct {
 }
 
 const (
+	hourHandLength   = 50
 	minuteHandLength = 80
 	secondHandLength = 90
 	clockCentreX     = 150
 	clockCentreY     = 150
+)
+
+const (
+	secondsInHalfClock = 30
+	secondsInClock     = 2 * secondsInHalfClock
+	minutesInHalfClock = 30
+	minutesInClock     = 2 * minutesInHalfClock
+	hoursInHalfClock   = 6
+	hoursInClock       = 2 * hoursInHalfClock
 )
 
 // SecondHand is the unit vector of the second hand of an analogue clock at time `t`.
@@ -31,15 +41,15 @@ func SecondHand(t time.Time) Point {
 }
 
 func secondsInRadians(t time.Time) float64 {
-	return (math.Pi / (30 / (float64(t.Second()))))
+	return (math.Pi / (secondsInHalfClock / (float64(t.Second()))))
 }
 
 func minutesInRadians(t time.Time) float64 {
-	return (secondsInRadians(t) / 60) + (math.Pi / (30 / float64(t.Minute())))
+	return (secondsInRadians(t) / secondsInClock) + (math.Pi / (minutesInHalfClock / float64(t.Minute())))
 }
 
 func hoursInRadians(t time.Time) float64 {
-	return (minutesInRadians(t) / 12) + (math.Pi / (6 / float64(t.Hour()%12)))
+	return (minutesInRadians(t) / hoursInClock) + (math.Pi / (hoursInHalfClock / float64(t.Hour()%hoursInClock)))
 }
 
 func SVGWriter(w io.Writer, t time.Time) {
@@ -47,6 +57,7 @@ func SVGWriter(w io.Writer, t time.Time) {
 	io.WriteString(w, bezel)
 	secondHand(w, t)
 	minuteHand(w, t)
+	hourHand(w, t)
 	io.WriteString(w, svgEnd)
 }
 
@@ -63,6 +74,14 @@ func minuteHand(w io.Writer, t time.Time) {
 	p = Point{p.X * minuteHandLength, p.Y * minuteHandLength} // scale
 	p = Point{p.X, -p.Y}                                      // flip
 	p = Point{p.X + clockCentreX, p.Y + clockCentreY}         // translate
+	fmt.Fprintf(w, `<line x1="150" y1="150" x2="%.3f" y2="%.3f" style="fill:none;stroke:#000;stroke-width:3px;"/>`, p.X, p.Y)
+}
+
+func hourHand(w io.Writer, t time.Time) {
+	p := hourHandPoint(t)
+	p = Point{p.X * hourHandLength, p.Y * hourHandLength} // scale
+	p = Point{p.X, -p.Y}                                  // flip
+	p = Point{p.X + clockCentreX, p.Y + clockCentreY}     // translate
 	fmt.Fprintf(w, `<line x1="150" y1="150" x2="%.3f" y2="%.3f" style="fill:none;stroke:#000;stroke-width:3px;"/>`, p.X, p.Y)
 }
 
@@ -91,4 +110,8 @@ func secondHandPoint(t time.Time) Point {
 
 func minuteHandPoint(t time.Time) Point {
 	return angleToPoint(minutesInRadians(t))
+}
+
+func hourHandPoint(t time.Time) Point {
+	return angleToPoint(hoursInRadians(t))
 }
