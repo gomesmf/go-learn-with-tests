@@ -110,3 +110,42 @@ func TestSVGWriterAtMidnight(t *testing.T) {
 
 	t.Errorf("expected to find the second hand line %+v in the SVG lines %+v", want, svg.Line)
 }
+
+func TestSVGWriterSecondHand(t *testing.T) {
+	cases := []struct {
+		time time.Time
+		line Line
+	}{
+		{
+			time: simpleTime(0, 0, 0),
+			line: Line{150, 150, 150, 60},
+		},
+		{
+			time: simpleTime(0, 0, 30),
+			line: Line{150, 150, 150, 240},
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(testName(c.time), func(t *testing.T) {
+			b := bytes.Buffer{}
+			SVGWriter(&b, c.time)
+
+			svg := SVG{}
+			xml.Unmarshal(b.Bytes(), &svg)
+
+			if !containsLine(c.line, svg.Line) {
+				t.Errorf("expected to find the second hand line %+v in the SVG lines %+v", c.line, svg.Line)
+			}
+		})
+	}
+}
+
+func containsLine(l Line, ls []Line) bool {
+	for _, line := range ls {
+		if line == l {
+			return true
+		}
+	}
+	return false
+}
