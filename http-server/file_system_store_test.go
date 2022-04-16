@@ -7,7 +7,7 @@ import (
 )
 
 func TestFileSystemStore(t *testing.T) {
-	t.Run("league from reader", func(t *testing.T) {
+	t.Run("league sorted", func(t *testing.T) {
 		database, cleanDatabase := createTempFile(t, `[
 {"Name": "Cleo", "Wins": 10},
 {"Name": "Chris", "Wins": 33}]`)
@@ -20,8 +20,8 @@ func TestFileSystemStore(t *testing.T) {
 		got := store.GetLeague()
 
 		want := League{
-			{"Cleo", 10},
 			{"Chris", 33},
+			{"Cleo", 10},
 		}
 
 		assertLeague(t, got, want)
