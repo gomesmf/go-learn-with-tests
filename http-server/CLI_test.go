@@ -12,9 +12,7 @@ import (
 )
 
 var dummySpyAlerter = &poker.SpyBlindAlerter{}
-var dummyBlindAlerter = &poker.SpyBlindAlerter{}
 var dummyPlayerStore = &poker.StubPlayerStore{}
-var dummyStdIn = &bytes.Buffer{}
 var dummyStdOut = &bytes.Buffer{}
 
 func TestCLI(t *testing.T) {
