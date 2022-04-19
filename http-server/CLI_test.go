@@ -13,6 +13,20 @@ var dummySpyAlerter = &poker.SpyBlindAlerter{}
 var dummyPlayerStore = &poker.StubPlayerStore{}
 
 func TestCLI(t *testing.T) {
+	t.Run("start game with 3 players and finish game with 'Chris' as winner", func(t *testing.T) {
+		game := &poker.GameSpy{}
+		stdout := &bytes.Buffer{}
+
+		in := poker.UserSends("3", "Chris wins")
+		cli := poker.NewCLI(in, stdout, game)
+
+		cli.PlayPoker()
+
+		poker.AssertMessageSentToUser(t, stdout, poker.PlayerPrompt)
+		poker.AssertNumberOfPlayers(t, game.StartedWith, 3)
+		poker.AssertFinishCalledWith(t, game, "Chris")
+	})
+
 	t.Run("it prompts the user to enter the number of players and starts the game", func(t *testing.T) {
 		stdout := &bytes.Buffer{}
 		in := strings.NewReader("7\n")

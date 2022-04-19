@@ -213,3 +213,16 @@ func CheckSchedulingCases(cases []ScheduledAlert, t *testing.T, alerter *SpyBlin
 		})
 	}
 }
+
+func AssertFinishCalledWith(t testing.TB, game *GameSpy, winner string) {
+	t.Helper()
+
+	if game.FinishedWith != winner {
+		t.Errorf("wanted Finish called with %s, but got %s", winner, game.FinishedWith)
+	}
+}
+
+func UserSends(inputs ...string) io.Reader {
+	userSendsInput := strings.Join(inputs, "\n")
+	return strings.NewReader(userSendsInput)
+}
