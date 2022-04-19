@@ -47,6 +47,15 @@ func TestGame_Start(t *testing.T) {
 
 		checkSchedulingCases(cases, t, blindAlerter)
 	})
+
+	t.Run("record cleo win from user input", func(t *testing.T) {
+		playerStore := &poker.StubPlayerStore{}
+
+		game := poker.NewTexasHoldem(dummySpyAlerter, playerStore)
+		game.Finish("Cleo")
+
+		poker.AssertPlayerWin(t, playerStore, "Cleo")
+	})
 }
 
 func checkSchedulingCases(cases []poker.ScheduledAlert, t *testing.T, alerter *poker.SpyBlindAlerter) {
