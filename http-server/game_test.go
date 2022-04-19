@@ -1,7 +1,6 @@
 package poker_test
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -29,7 +28,7 @@ func TestGame_Start(t *testing.T) {
 			{At: 100 * time.Minute, Amount: 8000},
 		}
 
-		checkSchedulingCases(cases, t, blindAlerter)
+		poker.CheckSchedulingCases(cases, t, blindAlerter)
 	})
 
 	t.Run("schedules alerts on game start for 7 players", func(t *testing.T) {
@@ -45,7 +44,7 @@ func TestGame_Start(t *testing.T) {
 			{At: 36 * time.Minute, Amount: 400},
 		}
 
-		checkSchedulingCases(cases, t, blindAlerter)
+		poker.CheckSchedulingCases(cases, t, blindAlerter)
 	})
 
 	t.Run("record cleo win from user input", func(t *testing.T) {
@@ -56,21 +55,6 @@ func TestGame_Start(t *testing.T) {
 
 		poker.AssertPlayerWin(t, playerStore, "Cleo")
 	})
-}
-
-func checkSchedulingCases(cases []poker.ScheduledAlert, t *testing.T, alerter *poker.SpyBlindAlerter) {
-	t.Helper()
-	for i, want := range cases {
-		t.Run(fmt.Sprint(want), func(t *testing.T) {
-
-			if len(alerter.Alerts) <= i {
-				t.Fatalf("alert %d was not scheduled %v", i, alerter.Alerts)
-			}
-
-			got := alerter.Alerts[i]
-			poker.AssertScheduledAlert(t, got, want)
-		})
-	}
 }
 
 var dummyBlindAlerter = &poker.SpyBlindAlerter{}

@@ -1,6 +1,7 @@
 package poker
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -8,6 +9,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 )
@@ -172,4 +174,42 @@ func (g *GameSpy) Start(numberOfPlayers int) {
 
 func (g *GameSpy) Finish(winner string) {
 	g.FinishedWith = winner
+}
+
+func AssertMessageSentToUser(t testing.TB, stdout *bytes.Buffer, messages ...string) {
+	t.Helper()
+	want := strings.Join(messages, "")
+	got := stdout.String()
+	if got != want {
+		t.Errorf("got %q sent to stdout but expected %+v", got, messages)
+	}
+}
+
+func AssertStartNotCalled(t testing.TB, startCalled bool) {
+	t.Helper()
+	if startCalled {
+		t.Errorf("game should not have started")
+	}
+}
+
+func AssertNumberOfPlayers(t testing.TB, got, want int) {
+	t.Helper()
+	if got != want {
+		t.Errorf("wanted Start called with %d but got %d", want, got)
+	}
+}
+
+func CheckSchedulingCases(cases []ScheduledAlert, t *testing.T, alerter *SpyBlindAlerter) {
+	t.Helper()
+	for i, want := range cases {
+		t.Run(fmt.Sprint(want), func(t *testing.T) {
+
+			if len(alerter.Alerts) <= i {
+				t.Fatalf("alert %d was not scheduled %v", i, alerter.Alerts)
+			}
+
+			got := alerter.Alerts[i]
+			AssertScheduledAlert(t, got, want)
+		})
+	}
 }
