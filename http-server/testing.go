@@ -165,6 +165,7 @@ type GameSpy struct {
 	StartedWith  int
 	FinishedWith string
 	StartCalled  bool
+	FinishCalled bool
 }
 
 func (g *GameSpy) Start(numberOfPlayers int) {
@@ -174,6 +175,7 @@ func (g *GameSpy) Start(numberOfPlayers int) {
 
 func (g *GameSpy) Finish(winner string) {
 	g.FinishedWith = winner
+	g.FinishCalled = true
 }
 
 func AssertMessageSentToUser(t testing.TB, stdout *bytes.Buffer, messages ...string) {
