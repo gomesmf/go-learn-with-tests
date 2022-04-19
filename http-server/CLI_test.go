@@ -3,7 +3,7 @@ package poker_test
 import (
 	"bytes"
 
-	poker "github.com/gomesmf/go-learning/http-server"
+	poker "github.com/gomesmf/go-learn-with-tests/http-server"
 
 	"testing"
 )

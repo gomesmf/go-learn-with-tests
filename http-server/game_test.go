@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	poker "github.com/gomesmf/go-learning/http-server"
+	poker "github.com/gomesmf/go-learn-with-tests/http-server"
 )
 
 func TestGame_Start(t *testing.T) {

@@ -1,3 +1,3 @@
-module github.com/gomesmf/go-learning/context
+module github.com/gomesmf/go-learn-with-tests/context
 
 go 1.16

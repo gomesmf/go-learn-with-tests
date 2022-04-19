@@ -1,3 +1,3 @@
-module github.com/gomesmf/go-learning/mocking
+module github.com/gomesmf/go-learn-with-tests/mocking
 
 go 1.16

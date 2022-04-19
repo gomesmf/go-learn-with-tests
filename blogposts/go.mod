@@ -1,3 +1,3 @@
-module github.com/gomesmf/go-learning/blogposts
+module github.com/gomesmf/go-learn-with-tests/blogposts
 
 go 1.16

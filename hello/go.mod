@@ -1,3 +1,3 @@
-module github.com/gomesmf/go-learning/hello
+module github.com/gomesmf/go-learn-with-tests/hello
 
 go 1.16

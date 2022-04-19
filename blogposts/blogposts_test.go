@@ -7,7 +7,7 @@ import (
 	"testing"
 	"testing/fstest"
 
-	blogposts "github.com/gomesmf/go-learning/blogposts"
+	blogposts "github.com/gomesmf/go-learn-with-tests/blogposts"
 )
 
 type StubFailingFS struct {

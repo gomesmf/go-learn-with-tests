@@ -1,3 +1,3 @@
-module github.com/gomesmf/go-learning/math
+module github.com/gomesmf/go-learn-with-tests/math
 
 go 1.16

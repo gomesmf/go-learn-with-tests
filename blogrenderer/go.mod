@@ -1,4 +1,4 @@
-module github.com/gomesmf/go-learning/blogrenderer
+module github.com/gomesmf/go-learn-with-tests/blogrenderer
 
 go 1.18
 

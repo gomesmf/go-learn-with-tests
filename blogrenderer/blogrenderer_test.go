@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	approvals "github.com/approvals/go-approval-tests"
-	"github.com/gomesmf/go-learning/blogrenderer"
+	"github.com/gomesmf/go-learn-with-tests/blogrenderer"
 )
 
 func TestRender(t *testing.T) {

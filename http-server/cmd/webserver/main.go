@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	poker "github.com/gomesmf/go-learning/http-server"
+	poker "github.com/gomesmf/go-learn-with-tests/http-server"
 )
 
 const dbFileName = "game.db.json"

@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	clockface "github.com/gomesmf/go-learning/math"
+	clockface "github.com/gomesmf/go-learn-with-tests/math"
 )
 
 type SVG struct {

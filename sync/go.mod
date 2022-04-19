@@ -1,3 +1,3 @@
-module github.com/gomesmf/go-learning/sync
+module github.com/gomesmf/go-learn-with-tests/sync
 
 go 1.16

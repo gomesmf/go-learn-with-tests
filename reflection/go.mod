@@ -1,3 +1,3 @@
-module github.com/gomesmf/go-learning/reflection
+module github.com/gomesmf/go-learn-with-tests/reflection
 
 go 1.16

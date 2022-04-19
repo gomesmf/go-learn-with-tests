@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	blogposts "github.com/gomesmf/go-learning/blogposts"
+	blogposts "github.com/gomesmf/go-learn-with-tests/blogposts"
 )
 
 func main() {

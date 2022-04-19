@@ -1,3 +1,3 @@
-module github.com/gomesmf/go-learning/http-server
+module github.com/gomesmf/go-learn-with-tests/http-server
 
 go 1.18

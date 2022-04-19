@@ -1,3 +1,3 @@
-module github.com/gomesmf/go-learning/numeral
+module github.com/gomesmf/go-learn-with-tests/numeral
 
 go 1.16

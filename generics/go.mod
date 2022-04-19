@@ -1,3 +1,3 @@
-module github.com/gomesmf/go-learning/generics
+module github.com/gomesmf/go-learn-with-tests/generics
 
 go 1.18
