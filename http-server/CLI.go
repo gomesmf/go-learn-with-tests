@@ -52,12 +52,20 @@ func (cli *CLI) PlayPoker() {
 	cli.game.Finish(winner)
 }
 
+const playerWinsSuffix = " wins"
+const playerWinsExample = "{name}" + playerWinsSuffix
+const ErrBadWinnerSuffix = "bad winner pattern, try again with " + playerWinsExample + "pattern"
+
+func hasWinsSuffix(userInput string) bool {
+	return strings.HasSuffix(userInput, playerWinsSuffix)
+}
+
 func extractWinner(userInput string) (string, error) {
-	if strings.HasSuffix(userInput, " wins") {
-		return strings.Replace(userInput, " wins", "", 1), nil
+	if hasWinsSuffix(userInput) {
+		return strings.Replace(userInput, playerWinsSuffix, "", 1), nil
 	}
 
-	return "", errors.New("bad winner pattern")
+	return "", errors.New(ErrBadWinnerSuffix)
 }
 
 func (cli *CLI) readLine() string {
