@@ -20,7 +20,7 @@ func TestGETPlayers(t *testing.T) {
 		},
 		WinCalls: nil,
 	}
-	server := poker.NewPlayerServer(&store)
+	server := poker.MustMakePlayerServer(t, &store)
 
 	t.Run("returns Pepper's score", func(t *testing.T) {
 		request := poker.NewGetScoreRequest("Pepper")
@@ -57,7 +57,7 @@ func TestStoreWins(t *testing.T) {
 		Scores:   map[string]int{},
 		WinCalls: nil,
 	}
-	server := poker.NewPlayerServer(&store)
+	server := poker.MustMakePlayerServer(t, &store)
 
 	t.Run("it returns accepted on POST", func(t *testing.T) {
 		player := "Pepper"
@@ -83,7 +83,7 @@ func TestLeague(t *testing.T) {
 
 	t.Run("it returns 200 on /league", func(t *testing.T) {
 		store := poker.StubPlayerStore{}
-		server := poker.NewPlayerServer(&store)
+		server := poker.MustMakePlayerServer(t, &store)
 
 		request, _ := http.NewRequest(http.MethodGet, "/league", nil)
 		response := httptest.NewRecorder()
@@ -109,7 +109,7 @@ func TestLeague(t *testing.T) {
 		}
 
 		store := poker.StubPlayerStore{nil, nil, wantedLeague}
-		server := poker.NewPlayerServer(&store)
+		server := poker.MustMakePlayerServer(t, &store)
 
 		request := poker.NewLeagueRequest()
 		response := httptest.NewRecorder()
@@ -125,7 +125,8 @@ func TestLeague(t *testing.T) {
 
 func TestGETGame(t *testing.T) {
 	t.Run("GET /game returns 200", func(t *testing.T) {
-		server := poker.NewPlayerServer(&poker.StubPlayerStore{})
+		store := &poker.StubPlayerStore{}
+		server := poker.MustMakePlayerServer(t, store)
 
 		request := poker.NewGameRequest()
 		response := httptest.NewRecorder()
@@ -138,7 +139,7 @@ func TestGETGame(t *testing.T) {
 	t.Run("when we get a message over a websocket it is a winner of a game", func(t *testing.T) {
 		store := &poker.StubPlayerStore{}
 		winner := "Ruth"
-		server := httptest.NewServer(poker.NewPlayerServer(store))
+		server := httptest.NewServer(poker.MustMakePlayerServer(t, store))
 		defer server.Close()
 
 		wsURL := "ws" + strings.TrimPrefix(server.URL, "http") + "/ws"

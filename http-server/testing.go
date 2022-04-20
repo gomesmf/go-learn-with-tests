@@ -234,3 +234,12 @@ func NewGameRequest() *http.Request {
 	req, _ := http.NewRequest(http.MethodGet, "/game", nil)
 	return req
 }
+
+func MustMakePlayerServer(t *testing.T, store PlayerStore) *PlayerServer {
+	t.Helper()
+	server, err := NewPlayerServer(store)
+	if err != nil {
+		t.Fatal("problem creating player server", err)
+	}
+	return server
+}
