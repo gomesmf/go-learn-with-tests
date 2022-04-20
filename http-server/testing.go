@@ -219,7 +219,7 @@ func CheckSchedulingCases(cases []ScheduledAlert, t *testing.T, alerter *SpyBlin
 	}
 }
 
-func AssertFinishCalledWith(t testing.TB, game *GameSpy, winner string) {
+func AssertGameFinishedWith(t testing.TB, game *GameSpy, winner string) {
 	t.Helper()
 
 	if game.FinishedWith != winner {
@@ -237,9 +237,9 @@ func NewGameRequest() *http.Request {
 	return req
 }
 
-func MustMakePlayerServer(t *testing.T, store PlayerStore) *PlayerServer {
+func MustMakePlayerServer(t *testing.T, store PlayerStore, game Game) *PlayerServer {
 	t.Helper()
-	server, err := NewPlayerServer(store)
+	server, err := NewPlayerServer(store, game)
 	if err != nil {
 		t.Fatal("problem creating player server", err)
 	}

@@ -23,7 +23,7 @@ func TestCLI(t *testing.T) {
 
 		poker.AssertMessageSentToUser(t, stdout, poker.PlayerPrompt)
 		poker.AssertGameStartedWith(t, game, 3)
-		poker.AssertFinishCalledWith(t, game, "Chris")
+		poker.AssertGameFinishedWith(t, game, "Chris")
 	})
 
 	t.Run("it prompts the user to enter the number of players and starts the game", func(t *testing.T) {
