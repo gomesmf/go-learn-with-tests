@@ -165,19 +165,23 @@ func AssertScheduledAlert(t testing.TB, got, want ScheduledAlert) {
 }
 
 type GameSpy struct {
-	StartedWith  int
-	FinishedWith string
-	StartCalled  bool
-	FinishCalled bool
+	StartCalled     bool
+	StartCalledWith int
+	BlindAlert      []byte
+
+	FinishCalledWith string
+	FinishCalled     bool
 }
 
-func (g *GameSpy) Start(numberOfPlayers int, alertsDestination io.Writer) {
-	g.StartedWith = numberOfPlayers
+func (g *GameSpy) Start(numberOfPlayers int, out io.Writer) {
+	g.StartCalledWith = numberOfPlayers
 	g.StartCalled = true
+
+	out.Write(g.BlindAlert)
 }
 
 func (g *GameSpy) Finish(winner string) {
-	g.FinishedWith = winner
+	g.FinishCalledWith = winner
 	g.FinishCalled = true
 }
 
@@ -199,8 +203,8 @@ func AssertStartNotCalled(t testing.TB, startCalled bool) {
 
 func AssertGameStartedWith(t testing.TB, game *GameSpy, want int) {
 	t.Helper()
-	if game.StartedWith != want {
-		t.Errorf("wanted Start called with %d but got %d", want, game.StartedWith)
+	if game.StartCalledWith != want {
+		t.Errorf("wanted Start called with %d but got %d", want, game.StartCalledWith)
 	}
 }
 
@@ -222,8 +226,8 @@ func CheckSchedulingCases(cases []ScheduledAlert, t *testing.T, alerter *SpyBlin
 func AssertGameFinishedWith(t testing.TB, game *GameSpy, winner string) {
 	t.Helper()
 
-	if game.FinishedWith != winner {
-		t.Errorf("wanted Finish called with %s, but got %s", winner, game.FinishedWith)
+	if game.FinishCalledWith != winner {
+		t.Errorf("wanted Finish called with %s, but got %s", winner, game.FinishCalledWith)
 	}
 }
 
