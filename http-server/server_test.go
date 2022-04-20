@@ -9,7 +9,6 @@ import (
 	"time"
 
 	poker "github.com/gomesmf/go-learn-with-tests/http-server"
-	"github.com/gorilla/websocket"
 )
 
 func TestGETPlayers(t *testing.T) {
@@ -143,15 +142,10 @@ func TestGETGame(t *testing.T) {
 		defer server.Close()
 
 		wsURL := "ws" + strings.TrimPrefix(server.URL, "http") + "/ws"
-		ws, _, err := websocket.DefaultDialer.Dial(wsURL, nil)
-		if err != nil {
-			t.Fatalf("could not open a ws connection on %s %v", wsURL, err)
-		}
+		ws := poker.MustDialWS(t, wsURL)
 		defer ws.Close()
 
-		if err := ws.WriteMessage(websocket.TextMessage, []byte(winner)); err != nil {
-			t.Fatalf("could not send message over ws connection %v", err)
-		}
+		poker.WriteWSMessage(t, ws, winner)
 
 		time.Sleep(10 * time.Millisecond)
 		poker.AssertPlayerWin(t, store, winner)
