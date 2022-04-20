@@ -197,10 +197,10 @@ func AssertStartNotCalled(t testing.TB, startCalled bool) {
 	}
 }
 
-func AssertNumberOfPlayers(t testing.TB, got, want int) {
+func AssertGameStartedWith(t testing.TB, game *GameSpy, want int) {
 	t.Helper()
-	if got != want {
-		t.Errorf("wanted Start called with %d but got %d", want, got)
+	if game.StartedWith != want {
+		t.Errorf("wanted Start called with %d but got %d", want, game.StartedWith)
 	}
 }
 

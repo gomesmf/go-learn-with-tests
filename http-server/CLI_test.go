@@ -22,7 +22,7 @@ func TestCLI(t *testing.T) {
 		cli.PlayPoker()
 
 		poker.AssertMessageSentToUser(t, stdout, poker.PlayerPrompt)
-		poker.AssertNumberOfPlayers(t, game.StartedWith, 3)
+		poker.AssertGameStartedWith(t, game, 3)
 		poker.AssertFinishCalledWith(t, game, "Chris")
 	})
 
@@ -35,7 +35,7 @@ func TestCLI(t *testing.T) {
 		cli.PlayPoker()
 
 		poker.AssertMessageSentToUser(t, stdout, poker.PlayerPrompt)
-		poker.AssertNumberOfPlayers(t, game.StartedWith, 7)
+		poker.AssertGameStartedWith(t, game, 7)
 	})
 
 	t.Run("it prints an error when a non numeric value is entered and does not start the game", func(t *testing.T) {
