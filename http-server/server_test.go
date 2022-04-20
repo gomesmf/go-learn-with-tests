@@ -9,7 +9,6 @@ import (
 	"time"
 
 	poker "github.com/gomesmf/go-learn-with-tests/http-server"
-	"github.com/gorilla/websocket"
 )
 
 var dummyGame = &poker.GameSpy{}
@@ -156,30 +155,6 @@ func TestGETGame(t *testing.T) {
 
 		poker.AssertGameStartedWith(t, game, 3)
 		poker.AssertGameFinishedWith(t, game, winner)
-		within(t, 10*time.Millisecond, func() { assertWebsocketGotMsg(t, ws, wantedBlindAlert) })
+		poker.Within(t, 10*time.Millisecond, func() { poker.AssertWebsocketGotMsg(t, ws, wantedBlindAlert) })
 	})
-}
-
-func within(t testing.TB, d time.Duration, assert func()) {
-	t.Helper()
-
-	done := make(chan struct{}, 1)
-
-	go func() {
-		assert()
-		done <- struct{}{}
-	}()
-
-	select {
-	case <-time.After(d):
-		t.Error("timed out")
-	case <-done:
-	}
-}
-
-func assertWebsocketGotMsg(t *testing.T, ws *websocket.Conn, want string) {
-	_, msg, _ := ws.ReadMessage()
-	if string(msg) != want {
-		t.Errorf(`got "%s", want %s`, string(msg), want)
-	}
 }

@@ -266,3 +266,27 @@ func WriteWSMessage(t testing.TB, conn *websocket.Conn, message string) {
 		t.Fatalf("could not send message over ws connection %v", err)
 	}
 }
+
+func Within(t testing.TB, d time.Duration, assert func()) {
+	t.Helper()
+
+	done := make(chan struct{}, 1)
+
+	go func() {
+		assert()
+		done <- struct{}{}
+	}()
+
+	select {
+	case <-time.After(d):
+		t.Error("timed out")
+	case <-done:
+	}
+}
+
+func AssertWebsocketGotMsg(t *testing.T, ws *websocket.Conn, want string) {
+	_, msg, _ := ws.ReadMessage()
+	if string(msg) != want {
+		t.Errorf(`got "%s", want %s`, string(msg), want)
+	}
+}
