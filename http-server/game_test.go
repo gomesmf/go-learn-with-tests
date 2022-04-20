@@ -79,19 +79,11 @@ func TestGame(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		assertStatus(t, response, http.StatusOK)
+		poker.AssertStatus(t, response, http.StatusOK)
 	})
 }
 
 func NewGameRequest() *http.Request {
 	req, _ := http.NewRequest(http.MethodGet, "/game", nil)
 	return req
-}
-
-func assertStatus(t testing.TB, response *httptest.ResponseRecorder, want int) {
-	t.Helper()
-
-	if response.Code != want {
-		t.Errorf("did not get correct status, got %d, want %d", response.Code, want)
-	}
 }

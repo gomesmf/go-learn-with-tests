@@ -23,7 +23,7 @@ func TestGETPlayers(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		AssertStatus(t, response.Code, http.StatusOK)
+		AssertStatus(t, response, http.StatusOK)
 		AssertResponseBody(t, response.Body.String(), "20")
 	})
 
@@ -33,7 +33,7 @@ func TestGETPlayers(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		AssertStatus(t, response.Code, http.StatusOK)
+		AssertStatus(t, response, http.StatusOK)
 		AssertResponseBody(t, response.Body.String(), "10")
 	})
 
@@ -43,7 +43,7 @@ func TestGETPlayers(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		AssertStatus(t, response.Code, http.StatusNotFound)
+		AssertStatus(t, response, http.StatusNotFound)
 	})
 }
 
@@ -62,7 +62,7 @@ func TestStoreWins(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		AssertStatus(t, response.Code, http.StatusAccepted)
+		AssertStatus(t, response, http.StatusAccepted)
 
 		if len(store.winCalls) != 1 {
 			t.Fatalf("got %d calls to RecordWin, want %d", len(store.winCalls), 1)
@@ -93,7 +93,7 @@ func TestLeague(t *testing.T) {
 			t.Fatalf("Unable to parse response from server %q into slice of Player, '%v'", response.Body, err)
 		}
 
-		AssertStatus(t, response.Code, http.StatusOK)
+		AssertStatus(t, response, http.StatusOK)
 	})
 
 	t.Run("it returns the league table as JSON", func(t *testing.T) {
@@ -112,7 +112,7 @@ func TestLeague(t *testing.T) {
 		server.ServeHTTP(response, request)
 
 		got := GetLeagueFromResponse(t, response.Body)
-		AssertStatus(t, response.Code, http.StatusOK)
+		AssertStatus(t, response, http.StatusOK)
 		AssertLeague(t, got, wantedLeague)
 		AssertContentType(t, response, jsonContentType)
 	})
