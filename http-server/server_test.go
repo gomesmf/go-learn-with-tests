@@ -1,75 +1,77 @@
-package poker
+package poker_test
 
 import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	poker "github.com/gomesmf/go-learn-with-tests/http-server"
 )
 
 func TestGETPlayers(t *testing.T) {
-	store := StubPlayerStore{
-		scores: map[string]int{
+	store := poker.StubPlayerStore{
+		Scores: map[string]int{
 			"Pepper": 20,
 			"Floyd":  10,
 		},
-		winCalls: nil,
+		WinCalls: nil,
 	}
-	server := NewPlayerServer(&store)
+	server := poker.NewPlayerServer(&store)
 
 	t.Run("returns Pepper's score", func(t *testing.T) {
-		request := NewGetScoreRequest("Pepper")
+		request := poker.NewGetScoreRequest("Pepper")
 		response := httptest.NewRecorder()
 
 		server.ServeHTTP(response, request)
 
-		AssertStatus(t, response, http.StatusOK)
-		AssertResponseBody(t, response.Body.String(), "20")
+		poker.AssertStatus(t, response, http.StatusOK)
+		poker.AssertResponseBody(t, response.Body.String(), "20")
 	})
 
 	t.Run("returns Floyd's score", func(t *testing.T) {
-		request := NewGetScoreRequest("Floyd")
+		request := poker.NewGetScoreRequest("Floyd")
 		response := httptest.NewRecorder()
 
 		server.ServeHTTP(response, request)
 
-		AssertStatus(t, response, http.StatusOK)
-		AssertResponseBody(t, response.Body.String(), "10")
+		poker.AssertStatus(t, response, http.StatusOK)
+		poker.AssertResponseBody(t, response.Body.String(), "10")
 	})
 
 	t.Run("returns 404 on missing players", func(t *testing.T) {
-		request := NewGetScoreRequest("Apollo")
+		request := poker.NewGetScoreRequest("Apollo")
 		response := httptest.NewRecorder()
 
 		server.ServeHTTP(response, request)
 
-		AssertStatus(t, response, http.StatusNotFound)
+		poker.AssertStatus(t, response, http.StatusNotFound)
 	})
 }
 
 func TestStoreWins(t *testing.T) {
-	store := StubPlayerStore{
-		scores:   map[string]int{},
-		winCalls: nil,
+	store := poker.StubPlayerStore{
+		Scores:   map[string]int{},
+		WinCalls: nil,
 	}
-	server := NewPlayerServer(&store)
+	server := poker.NewPlayerServer(&store)
 
 	t.Run("it returns accepted on POST", func(t *testing.T) {
 		player := "Pepper"
 
-		request := NewPostWinRequest(player)
+		request := poker.NewPostWinRequest(player)
 		response := httptest.NewRecorder()
 
 		server.ServeHTTP(response, request)
 
-		AssertStatus(t, response, http.StatusAccepted)
+		poker.AssertStatus(t, response, http.StatusAccepted)
 
-		if len(store.winCalls) != 1 {
-			t.Fatalf("got %d calls to RecordWin, want %d", len(store.winCalls), 1)
+		if len(store.WinCalls) != 1 {
+			t.Fatalf("got %d calls to RecordWin, want %d", len(store.WinCalls), 1)
 		}
 
-		if store.winCalls[0] != player {
-			t.Errorf("did not store correct winner, got %q, want %q", store.winCalls[0], player)
+		if store.WinCalls[0] != player {
+			t.Errorf("did not store correct winner, got %q, want %q", store.WinCalls[0], player)
 		}
 	})
 }
@@ -77,15 +79,15 @@ func TestStoreWins(t *testing.T) {
 func TestLeague(t *testing.T) {
 
 	t.Run("it returns 200 on /league", func(t *testing.T) {
-		store := StubPlayerStore{}
-		server := NewPlayerServer(&store)
+		store := poker.StubPlayerStore{}
+		server := poker.NewPlayerServer(&store)
 
 		request, _ := http.NewRequest(http.MethodGet, "/league", nil)
 		response := httptest.NewRecorder()
 
 		server.ServeHTTP(response, request)
 
-		var got League
+		var got poker.League
 
 		err := json.NewDecoder(response.Body).Decode(&got)
 
@@ -93,27 +95,40 @@ func TestLeague(t *testing.T) {
 			t.Fatalf("Unable to parse response from server %q into slice of Player, '%v'", response.Body, err)
 		}
 
-		AssertStatus(t, response, http.StatusOK)
+		poker.AssertStatus(t, response, http.StatusOK)
 	})
 
 	t.Run("it returns the league table as JSON", func(t *testing.T) {
-		wantedLeague := League{
+		wantedLeague := poker.League{
 			{"Cleo", 32},
 			{"Chris", 20},
 			{"Tiest", 14},
 		}
 
-		store := StubPlayerStore{nil, nil, wantedLeague}
-		server := NewPlayerServer(&store)
+		store := poker.StubPlayerStore{nil, nil, wantedLeague}
+		server := poker.NewPlayerServer(&store)
 
-		request := NewLeagueRequest()
+		request := poker.NewLeagueRequest()
 		response := httptest.NewRecorder()
 
 		server.ServeHTTP(response, request)
 
-		got := GetLeagueFromResponse(t, response.Body)
-		AssertStatus(t, response, http.StatusOK)
-		AssertLeague(t, got, wantedLeague)
-		AssertContentType(t, response, jsonContentType)
+		got := poker.GetLeagueFromResponse(t, response.Body)
+		poker.AssertStatus(t, response, http.StatusOK)
+		poker.AssertLeague(t, got, wantedLeague)
+		poker.AssertContentType(t, response, poker.JsonContentType)
+	})
+}
+
+func TestGETGame(t *testing.T) {
+	t.Run("GET /game returns 200", func(t *testing.T) {
+		server := poker.NewPlayerServer(&poker.StubPlayerStore{})
+
+		request := poker.NewGameRequest()
+		response := httptest.NewRecorder()
+
+		server.ServeHTTP(response, request)
+
+		poker.AssertStatus(t, response, http.StatusOK)
 	})
 }
