@@ -229,3 +229,8 @@ func UserSends(inputs ...string) io.Reader {
 	userSendsInput := strings.Join(inputs, "\n")
 	return strings.NewReader(userSendsInput)
 }
+
+func NewGameRequest() *http.Request {
+	req, _ := http.NewRequest(http.MethodGet, "/game", nil)
+	return req
+}
