@@ -1,6 +1,8 @@
 package poker_test
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"testing"
 	"time"
 
@@ -66,4 +68,30 @@ func TestGame_Finish(t *testing.T) {
 
 	game.Finish(winner)
 	poker.AssertPlayerWin(t, store, winner)
+}
+
+func TestGame(t *testing.T) {
+	t.Run("GET /game returns 200", func(t *testing.T) {
+		server := poker.NewPlayerServer(&poker.StubPlayerStore{})
+
+		request := NewGameRequest()
+		response := httptest.NewRecorder()
+
+		server.ServeHTTP(response, request)
+
+		assertStatus(t, response, http.StatusOK)
+	})
+}
+
+func NewGameRequest() *http.Request {
+	req, _ := http.NewRequest(http.MethodGet, "/game", nil)
+	return req
+}
+
+func assertStatus(t testing.TB, response *httptest.ResponseRecorder, want int) {
+	t.Helper()
+
+	if response.Code != want {
+		t.Errorf("did not get correct status, got %d, want %d", response.Code, want)
+	}
 }
