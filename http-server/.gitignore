@@ -1,3 +1,4 @@
 game.db.json
 http-server
 bin*
+*.DS_Store

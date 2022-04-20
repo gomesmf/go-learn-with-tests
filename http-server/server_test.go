@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
+	"time"
 
 	poker "github.com/gomesmf/go-learn-with-tests/http-server"
+	"github.com/gorilla/websocket"
 )
 
 func TestGETPlayers(t *testing.T) {
@@ -130,5 +133,26 @@ func TestGETGame(t *testing.T) {
 		server.ServeHTTP(response, request)
 
 		poker.AssertStatus(t, response, http.StatusOK)
+	})
+
+	t.Run("when we get a message over a websocket it is a winner of a game", func(t *testing.T) {
+		store := &poker.StubPlayerStore{}
+		winner := "Ruth"
+		server := httptest.NewServer(poker.NewPlayerServer(store))
+		defer server.Close()
+
+		wsURL := "ws" + strings.TrimPrefix(server.URL, "http") + "/ws"
+		ws, _, err := websocket.DefaultDialer.Dial(wsURL, nil)
+		if err != nil {
+			t.Fatalf("could not open a ws connection on %s %v", wsURL, err)
+		}
+		defer ws.Close()
+
+		if err := ws.WriteMessage(websocket.TextMessage, []byte(winner)); err != nil {
+			t.Fatalf("could not send message over ws connection %v", err)
+		}
+
+		time.Sleep(10 * time.Millisecond)
+		poker.AssertPlayerWin(t, store, winner)
 	})
 }
