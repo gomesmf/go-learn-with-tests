@@ -223,10 +223,24 @@ func CheckSchedulingCases(cases []ScheduledAlert, t *testing.T, alerter *SpyBlin
 	}
 }
 
+func retryUntil(d time.Duration, f func() bool) bool {
+	deadline := time.Now().Add(d)
+	for time.Now().Before(deadline) {
+		if f() {
+			return true
+		}
+	}
+	return false
+}
+
 func AssertGameFinishedWith(t testing.TB, game *GameSpy, winner string) {
 	t.Helper()
 
-	if game.FinishCalledWith != winner {
+	passed := retryUntil(500*time.Millisecond, func() bool {
+		return game.FinishCalledWith == winner
+	})
+
+	if !passed {
 		t.Errorf("wanted Finish called with %s, but got %s", winner, game.FinishCalledWith)
 	}
 }
